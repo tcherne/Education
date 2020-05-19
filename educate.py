@@ -10,8 +10,8 @@ import os, argparse, datetime, random
 def get_arg_parser():
   parser = argparse.ArgumentParser()
   parser.add_argument('-c', '--child', help='childs name', required=True)
-  parser.add_argument('-m', '--min', help='min value', default=0)
-  parser.add_argument('-x', '--max', help='max value', default=30)
+  parser.add_argument('-m', '--min', help='min value for problems', default=0)
+  parser.add_argument('-x', '--max', help='max value for problems', default=30)
   parser.add_argument('-k', '--kind', help='add/sub/mult/div/spell', nargs='+', required=True)
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
