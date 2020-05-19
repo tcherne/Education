@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import numpy as np
 import pandas as pd
 import os, argparse, datetime, random
@@ -21,8 +23,6 @@ def write_log(args, line):
   filename = '/'.join([args.results_directory, args.child, date])
   if not os.path.exists(directory):
     os.makedirs(directory)
-  print(date)
-  print(filename)
   with open(filename, "a") as file:
     file.writelines(line + '\n')
 
@@ -64,9 +64,11 @@ def subtraction(args, num1, num2):
   answer = max(num1, num2) - min(num1, num2)
   if reply == answer:
     print('Correct!')
+    correct = True
   else:
     print('Incorrect:')
     print('\tThe correct answer is', prompt, answer)
+    correct = False
   log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
   write_log(args, log_entry)
   print('\n')
@@ -78,9 +80,11 @@ def multiplication(args, num1, num2):
   answer = num1 * num2
   if reply == answer:
     print('Correct!')
+    correct = True
   else:
     print('Incorrect:')
     print('\tThe correct answer is', prompt, answer)
+    correct = False
   log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
   write_log(args, log_entry)
   print('\n')
@@ -95,9 +99,11 @@ def division(args, num1, num2):
   answer_remainder = max(num1, num2)%min(num1,num2)
   if reply == answer and reply_remainder == answer_remainder:
     print('Correct!')
+    correct = True
   else:
     print('Incorrect:')
     print('\tThe correct answer is', prompt, answer, ' remainder = ', answer_remainder)
+    correct = False
   log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
   write_log(args, log_entry)
   print('\n')
