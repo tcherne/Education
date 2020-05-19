@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import os, argparse, datetime, random
+from fractions import Fraction
 
 #Example Commandline
 #python3 educate.py -k add sub mult div spell -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
@@ -38,6 +39,10 @@ def generate_problem(args):
     multiplication(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'div':
     division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
+  elif kind == 'frac':
+    frac1 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
+    frac2 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
+    fraction(args, frac1, frac2)
 
 def addition(args, num1, num2):
   correct = None
@@ -138,6 +143,45 @@ def division(args, num1, num2):
       #needed to exit the valid loop
       break
 
+def fraction(args, num1, num2):
+  correct = None
+  prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
+  while True:
+    reply = input(prompt)
+    if not reply.isdigit() and reply:
+      print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
+      continue
+    else:
+      reply = int(reply)
+      answer = comparator(num1, num2)
+      if reply == answer:
+        print('Correct!')
+        correct = True
+      else:
+        print('Incorrect:')
+        text_answer = ''
+        if answer == 0:
+          text_answer = 'they are equal (enter 0)'
+        elif answer == 1:
+          text_answer = ' '.join([str(num1), '>', str(num2), '(enter 1)'])
+        elif answer == 2:
+          text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
+        print('\tThe correct answer is ', text_answer)
+        correct = False
+      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      write_log(args, log_entry)
+      print('\n')
+      #needed to exit the valid loop
+      break
+
+def comparator(num1, num2):
+  if num1>num2:
+    return 1
+  elif num1<num2:
+    return 2
+  else:
+    return 0
+    
 def main(args):
   print(args)
   for i in range(int(args.number_of_problems)):
