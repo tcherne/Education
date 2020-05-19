@@ -28,8 +28,8 @@ def write_log(args, line):
 
 def generate_problem(args):
   kind = random.choice(args.kind)
-  start = args.min
-  stop = args.max
+  start = int(args.min)
+  stop = int(args.max)
   if kind == 'add':
     addition(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'sub':
