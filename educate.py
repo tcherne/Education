@@ -6,7 +6,7 @@ import os, argparse, datetime, random
 from fractions import Fraction
 
 #Example Commandline
-#python3 educate.py -k add sub mult div spell -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+#python3 educate.py -k mult -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
@@ -28,6 +28,7 @@ def write_log(args, line):
     file.writelines(line + '\n')
 
 def generate_problem(args):
+  print('\n-----------------------------------------------------')
   kind = random.choice(args.kind)
   start = int(args.min)
   stop = int(args.max)
@@ -48,7 +49,7 @@ def addition(args, num1, num2):
   correct = None
   prompt = ' '.join([str(num1), '+', str(num2), '= '])
   while True:
-    reply = input(prompt)
+    reply = input(prompt).strip()
     if not reply.isdigit():
       print('Sorry, ' + str(reply) + ' is not a number.' )
       continue
@@ -72,7 +73,7 @@ def subtraction(args, num1, num2):
   correct = None
   prompt = ' '.join([str(max(num1, num2)), '-', str(min(num1,num2)), '= '])
   while True:
-    reply = input(prompt)
+    reply = input(prompt).strip()
     if not reply.isdigit():
       print('Sorry, ' + str(reply) + ' is not a number.' )
       continue
@@ -96,7 +97,7 @@ def multiplication(args, num1, num2):
   correct = None
   prompt = ' '.join([str(num1), '*', str(num2), '= '])
   while True:
-    reply = input(prompt)
+    reply = input(prompt).strip()
     if not reply.isdigit():
       print('Sorry, ' + str(reply) + ' is not a number.' )
       continue
@@ -121,7 +122,7 @@ def division(args, num1, num2):
   print('First give the answer, then the remainder')
   prompt = ' '.join([str(max(num1, num2)), '/', str(min(num1,num2)), '= '])
   while True:
-    reply = input(prompt)
+    reply = input(prompt).strip()
     if not reply.isdigit():
       print('Sorry, ' + str(reply) + ' is not a number.' )
       continue
@@ -147,7 +148,7 @@ def fraction(args, num1, num2):
   correct = None
   prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
   while True:
-    reply = input(prompt)
+    reply = input(prompt).strip()
     if not reply.isdigit() and reply:
       print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
       continue
@@ -181,7 +182,7 @@ def comparator(num1, num2):
     return 2
   else:
     return 0
-    
+
 def main(args):
   print(args)
   for i in range(int(args.number_of_problems)):
