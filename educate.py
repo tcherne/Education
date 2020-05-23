@@ -6,14 +6,14 @@ import os, argparse, datetime, random
 from fractions import Fraction
 
 #Example Commandline
-#python3 educate.py -k mult -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+#python3 educate.py -k skip -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
   parser.add_argument('-c', '--child', help='childs name', required=True)
   parser.add_argument('-m', '--min', help='min value for problems', default=0)
   parser.add_argument('-x', '--max', help='max value for problems', default=30)
-  parser.add_argument('-k', '--kind', help='add/sub/mult/div', nargs='+', required=True)
+  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip', nargs='+', required=True)
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
   return parser
@@ -44,6 +44,9 @@ def generate_problem(args):
     frac1 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
     frac2 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
     fraction(args, frac1, frac2)
+  elif kind == 'skip':
+    skip_count(args)
+
 
 def addition(args, num1, num2):
   correct = None
@@ -63,7 +66,7 @@ def addition(args, num1, num2):
         print('Incorrect:')
         print('\tThe correct answer is', prompt, answer)
         correct = False
-      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['addition', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       #needed to exit the valid loop
@@ -87,7 +90,7 @@ def subtraction(args, num1, num2):
         print('Incorrect:')
         print('\tThe correct answer is', prompt, answer)
         correct = False
-      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['subtraction', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       #needed to exit the valid loop
@@ -111,7 +114,7 @@ def multiplication(args, num1, num2):
         print('Incorrect:')
         print('\tThe correct answer is', prompt, answer)
         correct = False
-      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['multiplication', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       #needed to exit the valid loop
@@ -138,7 +141,7 @@ def division(args, num1, num2):
         print('Incorrect:')
         print('\tThe correct answer is', prompt, answer, ' remainder = ', answer_remainder)
         correct = False
-      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['division', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       #needed to exit the valid loop
@@ -169,11 +172,57 @@ def fraction(args, num1, num2):
           text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
         print('\tThe correct answer is ', text_answer)
         correct = False
-      log_entry = ','.join([prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['fraction', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       #needed to exit the valid loop
       break
+
+def skip_count(args):
+  correct = None
+  by = random.randint(1, 10)
+  number_of_times = 3
+  prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
+  reply = input(prompt).split(' ')
+  answer = np.arange(by, by*number_of_times + by, by)
+
+  while True:
+    if len(reply) != len(answer):
+      print('Please enter ', str(number_of_times), ' numbers. You entered ', len(reply), ' numbers.')
+      reply = input(prompt).split(' ')
+    else:
+      check = pd.DataFrame({'reply':reply, 'answer':answer})
+      check['reply'] = check['reply'].astype(int)
+      check['answer'] = check['answer'].astype(int)
+      check['difference'] = check['reply'] - check['answer']
+      if check['difference'].max() == 0 and check['difference'].min() == 0:
+        correct = True
+        print('Correct!')
+      else:
+        correct = False
+        print('Incorrect.')
+      log_entry = ','.join(['skip_count', prompt, str(reply), str(answer), str(correct)])
+      write_log(args, log_entry)
+      print('\n')
+      return correct
+    # if not reply.isdigit():
+    #   print('Sorry, ' + str(reply) + ' is not a number.' )
+    #   continue
+    # else:
+    #   reply = int(reply)
+    #   answer = num1 + num2
+    #   if reply == answer:
+    #     print('Correct!')
+    #     correct = True
+    #   else:
+    #     print('Incorrect:')
+    #     print('\tThe correct answer is', prompt, answer)
+    #     correct = False
+    #   log_entry = ','.join(['skip_count', prompt, str(reply), str(answer), str(correct)])
+    #   write_log(args, log_entry)
+    #   print('\n')
+    #   #needed to exit the valid loop
+    #   break
 
 def comparator(num1, num2):
   if num1>num2:
