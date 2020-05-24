@@ -181,7 +181,7 @@ def fraction(args, num1, num2):
 def skip_count(args):
   correct = None
   by = random.randint(1, 10)
-  number_of_times = 3
+  number_of_times = random.randint(3, 10)
   prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
   reply = input(prompt).split(' ')
   answer = np.arange(by, by*number_of_times + by, by)
@@ -201,28 +201,22 @@ def skip_count(args):
       else:
         correct = False
         print('Incorrect.')
+
+      print(''.join(['\tSkip counting by ', str(by), ' from ', str(by), ' to ', str(by*number_of_times), ' is the same as:']))
+      addition_string = ''
+      for n in np.arange(by, by*number_of_times + by, by):
+        if n != by*number_of_times:
+          addition_string = addition_string  + str(by)+' + '
+        else:
+          addition_string = addition_string  + str(by) + ' = ' + str(by*number_of_times)
+      print('\t', addition_string)
+      multiplication_string = ''
+      multiplication_string = ''.join([str(by), ' * ', str(number_of_times), ' = ', str(by*number_of_times)])
+      print('\t', multiplication_string)
       log_entry = ','.join(['skip_count', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       return correct
-    # if not reply.isdigit():
-    #   print('Sorry, ' + str(reply) + ' is not a number.' )
-    #   continue
-    # else:
-    #   reply = int(reply)
-    #   answer = num1 + num2
-    #   if reply == answer:
-    #     print('Correct!')
-    #     correct = True
-    #   else:
-    #     print('Incorrect:')
-    #     print('\tThe correct answer is', prompt, answer)
-    #     correct = False
-    #   log_entry = ','.join(['skip_count', prompt, str(reply), str(answer), str(correct)])
-    #   write_log(args, log_entry)
-    #   print('\n')
-    #   #needed to exit the valid loop
-    #   break
 
 def comparator(num1, num2):
   if num1>num2:
