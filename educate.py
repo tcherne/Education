@@ -13,7 +13,7 @@ def get_arg_parser():
   parser.add_argument('-c', '--child', help='childs name', required=True)
   parser.add_argument('-m', '--min', help='min value for problems', default=0)
   parser.add_argument('-x', '--max', help='max value for problems', default=30)
-  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip', nargs='+', required=True)
+  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place', nargs='+', required=True)
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
   return parser
@@ -33,20 +33,24 @@ def generate_problem(args):
   start = int(args.min)
   stop = int(args.max)
   if kind == 'add':
-    addition(args, random.randint(start, stop), random.randint(start, stop))
+    result = addition(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'sub':
-    subtraction(args, random.randint(start, stop), random.randint(start, stop))
+    result = subtraction(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'mult':
-    multiplication(args, random.randint(start, stop), random.randint(start, stop))
+    result = multiplication(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'div':
-    division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
+    result = division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
   elif kind == 'frac':
     frac1 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
     frac2 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
-    fraction(args, frac1, frac2)
+    result = fraction(args, frac1, frac2)
   elif kind == 'skip':
-    skip_count(args)
-
+    result = skip_count(args)
+  elif kind == 'tens':
+    result = make_tens(args)
+  elif kind == 'place':
+    result = place_value(args)
+    return result
 
 def addition(args, num1, num2):
   correct = None
@@ -69,8 +73,7 @@ def addition(args, num1, num2):
       log_entry = ','.join(['addition', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
-      #needed to exit the valid loop
-      break
+      return correct
 
 def subtraction(args, num1, num2):
   correct = None
@@ -93,8 +96,7 @@ def subtraction(args, num1, num2):
       log_entry = ','.join(['subtraction', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
-      #needed to exit the valid loop
-      break
+      return correct
 
 def multiplication(args, num1, num2):
   correct = None
@@ -117,8 +119,7 @@ def multiplication(args, num1, num2):
       log_entry = ','.join(['multiplication', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
-      #needed to exit the valid loop
-      break
+      return correct
 
 def division(args, num1, num2):
   correct = None
@@ -144,8 +145,7 @@ def division(args, num1, num2):
       log_entry = ','.join(['division', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
-      #needed to exit the valid loop
-      break
+      return correct
 
 def fraction(args, num1, num2):
   correct = None
@@ -175,8 +175,7 @@ def fraction(args, num1, num2):
       log_entry = ','.join(['fraction', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
-      #needed to exit the valid loop
-      break
+      return correct
 
 def skip_count(args):
   correct = None
@@ -218,6 +217,64 @@ def skip_count(args):
       print('\n')
       return correct
 
+def make_tens(args):
+  correct = None
+  number = random.randint(0, 9)
+  prompt = ' '.join(['How many do we need to add to', str(number), 'to make 10? '])
+  while True:
+    reply = input(prompt).strip()
+    if not reply.isdigit():
+      print('Sorry, ' + str(reply) + ' is not a number.' )
+      continue
+    else:
+      reply = int(reply)
+      answer = 10 - number
+      if reply == answer:
+        print('Correct!')
+        correct = True
+      else:
+        print('Incorrect:')
+        print('\tThe correct answer is', answer)
+        correct = False
+      print('\t', number, ' + ', str(10-number), ' = 10')
+      print('\t10 - ', number, ' = ', str(10-number))
+      log_entry = ','.join(['make_tens', prompt, str(reply), str(answer), str(correct)])
+      write_log(args, log_entry)
+      print('\n')
+      return correct
+
+def place_value(args):
+  correct = None
+  number = random.randint(100, 999)
+  place = random.choice(['ones', 'tens', 'hundreds'])
+  answer = 0
+  if place == 'hundreds':
+    answer = str(number)[0:0]
+  elif place == 'tens':
+    answer = str(number)[1:1]
+  elif place == 'ones':
+    answer = str(number)[2:2]
+  prompt = ' '.join(['What is the value of the', place, 'place in', str(number), '? '])
+  while True:
+    reply = input(prompt).strip()
+    if not reply.isdigit():
+      print('Sorry, ' + str(reply) + ' is not a number.' )
+      continue
+    else:
+      reply = int(reply)
+      answer = int(number / 100)
+      if reply == answer:
+        print('Correct!')
+        correct = True
+      else:
+        print('Incorrect:')
+        print('\tThe correct answer is', answer)
+        correct = False
+      log_entry = ','.join(['palce_value', prompt, str(reply), str(answer), str(correct)])
+      write_log(args, log_entry)
+      print('\n')
+      return correct
+
 def comparator(num1, num2):
   if num1>num2:
     return 1
@@ -228,8 +285,11 @@ def comparator(num1, num2):
 
 def main(args):
   print(args)
+  correct_count = 0
   for i in range(int(args.number_of_problems)):
-    generate_problem(args)
+    result = generate_problem(args)
+    correct_count = correct_count + result
+  print('Your score was ', correct_count, ' correct out of ', i + 1, ' problems.  Or ', "{:.0%}".format(correct_count/(i+1)))
 
 if __name__ == "__main__":
   main(get_arg_parser().parse_args())
