@@ -249,11 +249,11 @@ def place_value(args):
   place = random.choice(['ones', 'tens', 'hundreds'])
   answer = 0
   if place == 'hundreds':
-    answer = str(number)[0:0]
+    answer = int(str(number)[0])
   elif place == 'tens':
-    answer = str(number)[1:1]
+    answer = int(str(number)[1])
   elif place == 'ones':
-    answer = str(number)[2:2]
+    answer = int(str(number)[2])
   prompt = ' '.join(['What is the value of the', place, 'place in', str(number), '? '])
   while True:
     reply = input(prompt).strip()
