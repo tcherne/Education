@@ -50,7 +50,7 @@ def generate_problem(args):
     result = make_tens(args)
   elif kind == 'place':
     result = place_value(args)
-    return result
+  return result
 
 def addition(args, num1, num2):
   correct = None
