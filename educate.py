@@ -262,7 +262,6 @@ def place_value(args):
       continue
     else:
       reply = int(reply)
-      answer = int(number / 100)
       if reply == answer:
         print('Correct!')
         correct = True
