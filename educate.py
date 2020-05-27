@@ -262,7 +262,7 @@ def place_value(args):
       continue
     else:
       reply = int(reply)
-      if reply == answer:
+      if reply == int(answer):
         print('Correct!')
         correct = True
       else:
