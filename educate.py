@@ -6,7 +6,7 @@ import os, argparse, datetime, random
 from fractions import Fraction
 
 #Example Commandline
-#python3 educate.py -k skip -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+#python3 educate.py -k frac -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
@@ -152,10 +152,11 @@ def fraction(args, num1, num2):
   prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
   while True:
     reply = input(prompt).strip()
-    if not reply.isdigit() and reply:
+    if not reply.isdigit():
       print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
       continue
     else:
+      print('the reply is : ', reply)
       reply = int(reply)
       answer = comparator(num1, num2)
       if reply == answer:
