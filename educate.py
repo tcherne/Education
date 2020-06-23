@@ -186,7 +186,7 @@ def skip_count(args):
   by = int(random.choice(args.skip_numbers))
   number_of_times = random.randint(3, 10)
   prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
-  reply = input(prompt).split(' ')
+  reply = input(prompt).strip().split(' ')
   answer = np.arange(by, by*number_of_times + by, by)
 
   while True:
