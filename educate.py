@@ -15,6 +15,7 @@ def get_arg_parser():
   parser.add_argument('-x', '--max', help='max value for problems', default=30)
   parser.add_argument('-f', '--frac_max', help='the max value for fraction problems', default=10)
   parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place', nargs='+', required=True)
+  parser.add_argument('-s', '--skip_numbers', help='numbers to support for skip counting', nargs='+', required=False, default=[2,5,10])
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
   return parser
@@ -182,7 +183,7 @@ def fraction(args, num1, num2):
 
 def skip_count(args):
   correct = None
-  by = random.randint(1, 10)
+  by = int(random.choice(args.skip_numbers))
   number_of_times = random.randint(3, 10)
   prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
   reply = input(prompt).split(' ')
@@ -191,6 +192,7 @@ def skip_count(args):
   while True:
     if len(reply) != len(answer):
       print('Please enter ', str(number_of_times), ' numbers. You entered ', len(reply), ' numbers.')
+      reply = input(prompt).split(' ')
     else:
       reply = [r for r in reply if r.isdigit()]
       if len(reply) == len(answer):
