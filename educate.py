@@ -6,13 +6,14 @@ import os, argparse, datetime, random
 from fractions import Fraction
 
 #Example Commandline
-#python3 educate.py -k frac -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+#python3 educate.py -k skip -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
   parser.add_argument('-c', '--child', help='childs name', required=True)
   parser.add_argument('-m', '--min', help='min value for problems', default=0)
   parser.add_argument('-x', '--max', help='max value for problems', default=30)
+  parser.add_argument('-f', '--frac_max', help='the max value for fraction problems', default=10)
   parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place', nargs='+', required=True)
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
@@ -28,10 +29,11 @@ def write_log(args, line):
     file.writelines(line + '\n')
 
 def generate_problem(args):
-  print('\n-----------------------------------------------------')
+  print('-----------------------------------------------------')
   kind = random.choice(args.kind)
   start = int(args.min)
   stop = int(args.max)
+  fraction_max = int(args.frac_max)
   if kind == 'add':
     result = addition(args, random.randint(start, stop), random.randint(start, stop))
   elif kind == 'sub':
@@ -41,8 +43,8 @@ def generate_problem(args):
   elif kind == 'div':
     result = division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
   elif kind == 'frac':
-    frac1 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
-    frac2 = Fraction(random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
+    frac1 = Fraction(random.randint(max(1, fraction_max), max(1, fraction_max)), random.randint(max(1, fraction_max), max(1, fraction_max)))
+    frac2 = Fraction(random.randint(max(1, fraction_max), max(1, fraction_max)), random.randint(max(1, fraction_max), max(1, fraction_max)))
     result = fraction(args, frac1, frac2)
   elif kind == 'skip':
     result = skip_count(args)
@@ -152,7 +154,7 @@ def fraction(args, num1, num2):
   prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
   while True:
     reply = input(prompt).strip()
-    if not reply.isdigit():
+    if not reply.isdigit() or int(reply) > 2:
       print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
       continue
     else:
@@ -189,18 +191,22 @@ def skip_count(args):
   while True:
     if len(reply) != len(answer):
       print('Please enter ', str(number_of_times), ' numbers. You entered ', len(reply), ' numbers.')
-      reply = input(prompt).split(' ')
     else:
-      check = pd.DataFrame({'reply':reply, 'answer':answer})
-      check['reply'] = check['reply'].astype(int)
-      check['answer'] = check['answer'].astype(int)
-      check['difference'] = check['reply'] - check['answer']
-      if check['difference'].max() == 0 and check['difference'].min() == 0:
-        correct = True
-        print('Correct!')
+      reply = [r for r in reply if r.isdigit()]
+      if len(reply) == len(answer):
+        check = pd.DataFrame({'reply':reply, 'answer':answer})
+        check['reply'] = check['reply'].astype(int)
+        check['answer'] = check['answer'].astype(int)
+        check['difference'] = check['reply'] - check['answer']
+        if check['difference'].max() == 0 and check['difference'].min() == 0:
+          correct = True
+          print('Correct!')
+        else:
+          correct = False
+          print('Incorrect.')
       else:
         correct = False
-        print('Incorrect.')
+        print('Incorrect. Seems some values were not numbers')
 
       print(''.join(['\tSkip counting by ', str(by), ' from ', str(by), ' to ', str(by*number_of_times), ' is the same as:']))
       addition_string = ''
@@ -287,6 +293,7 @@ def main(args):
   print(args)
   correct_count = 0
   for i in range(int(args.number_of_problems)):
+    print('Problem ', str(i + 1), ':')
     result = generate_problem(args)
     correct_count = correct_count + result
   print('Your score was ', correct_count, ' correct out of ', i + 1, ' problems.  Or ', "{:.0%}".format(correct_count/(i+1)))
