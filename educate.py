@@ -6,7 +6,7 @@ import os, argparse, datetime, random
 from fractions import Fraction
 
 #Example Commandline
-#python3 educate.py -k skip -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+#python3 educate.py -k frac -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
@@ -44,8 +44,8 @@ def generate_problem(args):
   elif kind == 'div':
     result = division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
   elif kind == 'frac':
-    frac1 = Fraction(random.randint(max(1, fraction_max), max(1, fraction_max)), random.randint(max(1, fraction_max), max(1, fraction_max)))
-    frac2 = Fraction(random.randint(max(1, fraction_max), max(1, fraction_max)), random.randint(max(1, fraction_max), max(1, fraction_max)))
+    frac1 = Fraction(random.randint(max(1, 1), max(1, fraction_max)), random.randint(max(1, 1), max(1, fraction_max)))
+    frac2 = Fraction(random.randint(max(1, 1), max(1, fraction_max)), random.randint(max(1, 1), max(1, fraction_max)))
     result = fraction(args, frac1, frac2)
   elif kind == 'skip':
     result = skip_count(args)
