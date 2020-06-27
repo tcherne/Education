@@ -214,7 +214,7 @@ def decimal(args, num1, num2):
           text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
         print('\tThe correct answer is ', text_answer)
         correct = False
-      log_entry = ','.join(['fraction', prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['decimal', prompt, str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       return correct
