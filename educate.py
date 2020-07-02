@@ -14,7 +14,7 @@ def get_arg_parser():
   parser.add_argument('-m', '--min', help='min value for problems', default=0)
   parser.add_argument('-x', '--max', help='max value for problems', default=30)
   parser.add_argument('-f', '--frac_max', help='the max value for fraction problems', default=10)
-  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place/dec', nargs='+', required=True)
+  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place/dec/gle', nargs='+', required=True)
   parser.add_argument('-s', '--skip_numbers', help='numbers to support for skip counting', nargs='+', required=False, default=[2,5,10])
   parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
   parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
@@ -60,6 +60,8 @@ def generate_problem(args):
     num1 = round(random.uniform(greaterThan, lessThan), digits)
     num2 = round(random.uniform(greaterThan, lessThan), digits)
     result = decimal(args, num1, num2)
+  elif kind == 'gle':
+    result = gle(args, random.randint(start, stop), random.randint(start, stop))
   return result
 
 def addition(args, num1, num2):
@@ -183,7 +185,7 @@ def fraction(args, num1, num2):
           text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
         print('\tThe correct answer is ', text_answer)
         correct = False
-      log_entry = ','.join(['fraction', prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['fraction', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       return correct
@@ -214,7 +216,42 @@ def decimal(args, num1, num2):
           text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
         print('\tThe correct answer is ', text_answer)
         correct = False
-      log_entry = ','.join(['decimal', prompt, str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['decimal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
+      write_log(args, log_entry)
+      print('\n')
+      return correct
+
+def gle(args, num1, num2):
+  correct = None
+  equal = ' '.join([str(num1), '=', str(num2)])
+  gt = ' '.join([str(num1), '>', str(num2)])
+  lt = ' '.join([str(num1), '<', str(num2)])
+
+  prompt = ' '.join(['Which answer is correct? \n0: ', equal, '\n1: ', gt, '\n2: ', lt, '\n'])
+  while True:
+    reply = input(prompt).strip()
+    if not reply.isdigit() or int(reply) > 2:
+      print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
+      continue
+    else:
+      print('the reply is : ', reply)
+      reply = int(reply)
+      answer = comparator(num1, num2)
+      if reply == answer:
+        print('Correct!')
+        correct = True
+      else:
+        print('Incorrect:')
+        text_answer = ''
+        if answer == 0:
+          text_answer = 'they are equal (enter 0)'
+        elif answer == 1:
+          text_answer = ' '.join([str(num1), '>', str(num2), '(enter 1)', '\n\t', str(num1), 'is bigger than', str(num2)])
+        elif answer == 2:
+          text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)', '\n\t', str(num1), 'is smaller than', str(num2)])
+        print('\tThe correct answer is ', text_answer)
+        correct = False
+      log_entry = ','.join(['decimal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
       write_log(args, log_entry)
       print('\n')
       return correct
