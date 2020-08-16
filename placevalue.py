@@ -4,10 +4,12 @@ import random
 import sys
 
 import writelog
+import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def place_value_problem(results_directory, min_value, max_value):
+def place_value_problem(results_directory, min_value, max_value, videos):
+  videoprompt.print_video_message(videos)
   correct = None
   number = random.randint(100, 999)
   place = random.choice(['ones', 'tens', 'hundreds'])

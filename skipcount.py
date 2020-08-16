@@ -7,11 +7,12 @@ import numpy as np
 import pandas as pd
 
 import writelog
-
+import videoprompt
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
 
-def skip_count_problem(results_directory, by_values):
+def skip_count_problem(results_directory, by_values, videos):
+  videoprompt.print_video_message(videos)
   correct = None
   # by = int(random.choice(args.skip_numbers))
   by = int(random.choice(by_values))

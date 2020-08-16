@@ -10,6 +10,7 @@ import sys
 import numpy as np
 import pandas as pd
 
+import settings
 import addition
 import decimalplace
 import division
@@ -21,12 +22,10 @@ import placevalue
 import skipcount
 import subtraction
 
-sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
+CONFIG = '/home/timcherne/PythonProjects/Education_Program/'
 
-CONFIG = '/home/timcherne/PythonProjects/Education_Program/config'
-
-def read_config(name):
-  with open(CONFIG, 'r') as json_file:
+def read_config(name, config_path):
+  with open('/'.join([config_path, 'config']), 'r') as json_file:
     config_text = json.load(json_file)
     config = json.loads(config_text)
   return config[name]
@@ -37,6 +36,8 @@ def call_python_file(path):
 def get_arg_parser():
   parser = argparse.ArgumentParser()
   parser.add_argument('-n', '--name', help='childs name', required=True)
+  parser.add_argument('-c', '--config_path', default=CONFIG)
+  parser.add_argument('-r', '--results_path', required=True)
   return parser
 
 def generate_problems(name, config):
@@ -45,44 +46,52 @@ def generate_problems(name, config):
   for qt in config['questions']:
     question_types.append(qt)
   kind = random.choice(question_types)
-  print('kind:', kind)
 
   if kind == 'addition':
     min_value = config['questions']['addition']['min']
     max_value = config['questions']['addition']['max']
-    result = addition.addition_problem(config['results_directory'], int(min_value), int(max_value))
+    videos = config['questions']['addition']['videos']
+    result = addition.addition_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'subtraction':
     min_value = config['questions']['subtraction']['min']
     max_value = config['questions']['subtraction']['max']
-    result = subtraction.subtraction_problem(config['results_directory'], int(min_value), int(max_value))
+    videos = config['questions']['subtraction']['videos']
+    result = subtraction.subtraction_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'multiplication':
     min_value = config['questions']['multiplication']['min']
     max_value = config['questions']['multiplication']['max']
-    result = multiplication.multiplication_problem(config['results_directory'], random.randint(min_value, max_value), random.randint(min_value, max_value))
+    videos = config['questions']['multiplication']['videos']
+    result = multiplication.multiplication_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'division':
     min_value = config['questions']['division']['min']
     max_value = config['questions']['division']['max']
-    result = division.division_problem(config['results_directory'], min_value, max_value)
+    videos = config['questions']['division']['videos']
+    result = division.division_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'fraction':
     min_value = config['questions']['fraction']['min']
     max_value = config['questions']['fraction']['max']
-    result = fraction.fraction_problem(config['results_directory'], min_value, max_value)
+    videos = config['questions']['fraction']['videos']
+    result = fraction.fraction_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'skipcount':
     by_values = config['questions']['skipcount']['by_values']
-    result = skipcount.skip_count_problem(config['results_directory'], by_values)
+    videos = config['questions']['skipcount']['videos']
+    result = skipcount.skip_count_problem(config['results_directory'], by_values, videos)
   elif kind == 'maketens':
     result = maketens.make_tens_problem(config['results_directory'])
   elif kind == 'place_value':
     min_value = config['questions']['place_value']['min']
     max_value = config['questions']['place_value']['max']
-    result = placevalue.place_value_problem(config['results_directory'], min_value, max_value)
+    videos = config['questions']['place_value']['videos']
+    result = placevalue.place_value_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'decimal':
     digits = config['questions']['decimal']['digits']
-    result = decimalplace.decimal_problem(config['results_directory'], digits)
+    videos = config['questions']['decimal']['videos']
+    result = decimalplace.decimal_problem(config['results_directory'], int(digits), videos)
   elif kind == 'greaterthan_lessthan':
     min_value = config['questions']['greaterthan_lessthan']['min']
     max_value = config['questions']['greaterthan_lessthan']['max']
-    result = greaterless.gle_problem(config['results_directory'], min_value, max_value)
+    videos = config['questions']['greaterthan_lessthan']['videos']
+    result = greaterless.gle_problem(config['results_directory'], int(min_value), int(max_value), videos)
   return result
 
 def comparator(num1, num2):
@@ -94,8 +103,9 @@ def comparator(num1, num2):
     return 0
 
 def main(args):
+  settings.generate_settings(args.config_path, args.results_path)
   print('Preparing test for', args.name)
-  config = read_config(args.name)
+  config = read_config(args.name, args.config_path)
   correct_count = 0
   for i in range(int(config['number_of_questions'])):
     print('Problem ', str(i + 1), ':')

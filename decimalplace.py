@@ -4,6 +4,7 @@ import random
 import sys
 
 import writelog
+import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
@@ -15,7 +16,8 @@ def comparator(num1, num2):
   else:
     return 0
 
-def decimal_problem(results_directory, digits):
+def decimal_problem(results_directory, digits, videos):
+  videoprompt.print_video_message(videos)
   greaterThan = float(0)
   lessThan = float(1)
   num1 = round(random.uniform(greaterThan, lessThan), digits)

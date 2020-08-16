@@ -4,6 +4,7 @@ import random
 import sys
 
 import writelog
+import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
@@ -15,7 +16,8 @@ def comparator(num1, num2):
   else:
     return 0
 
-def gle_problem(results_directory, min_value, max_value):
+def gle_problem(results_directory, min_value, max_value, videos):
+  videoprompt.print_video_message(videos)
   num1 = random.randint(min_value, max_value)
   num2 = random.randint(min_value, max_value)
 
