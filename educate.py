@@ -1,362 +1,89 @@
 #!/usr/bin/python
+import argparse
+import datetime
+import importlib
+import json
+import os
+import random
+import sys
+
 import numpy as np
 import pandas as pd
-import os, argparse, datetime, random
-from fractions import Fraction
 
-#Example Commandline
-#python3 educate.py -k dec -n 3 -c Tim -r "/home/timcherne/PythonProjects/Education_Program/test"
+import addition
+import decimalplace
+import division
+import fraction
+import greaterless
+import maketens
+import multiplication
+import placevalue
+import skipcount
+import subtraction
+
+sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
+
+CONFIG = '/home/timcherne/PythonProjects/Education_Program/config'
+
+def read_config(name):
+  with open(CONFIG, 'r') as json_file:
+    config_text = json.load(json_file)
+    config = json.loads(config_text)
+  return config[name]
+
+def call_python_file(path):
+  call(['python3', '{}'.format(path)])
 
 def get_arg_parser():
   parser = argparse.ArgumentParser()
-  parser.add_argument('-c', '--child', help='childs name', required=True)
-  parser.add_argument('-d', '--digits', help='number of digits for decimal comparison problems', required=False, default=2)
-  parser.add_argument('-m', '--min', help='min value for problems', default=0)
-  parser.add_argument('-x', '--max', help='max value for problems', default=30)
-  parser.add_argument('-f', '--frac_max', help='the max value for fraction problems', default=10)
-  parser.add_argument('-k', '--kind', help='add/sub/mult/div/frac/skip/tens/place/dec/gle', nargs='+', required=True)
-  parser.add_argument('-s', '--skip_numbers', help='numbers to support for skip counting', nargs='+', required=False, default=[2,5,10])
-  parser.add_argument('-n', '--number_of_problems', help='number of problems', default=10)
-  parser.add_argument('-r', '--results_directory', help='path to the results folder', required=True)
+  parser.add_argument('-n', '--name', help='childs name', required=True)
   return parser
 
-def write_log(args, line):
-  date = datetime.datetime.now().strftime('%Y%m%d')
-  directory = '/'.join([args.results_directory, args.child])
-  filename = '/'.join([args.results_directory, args.child, date])
-  if not os.path.exists(directory):
-    os.makedirs(directory)
-  with open(filename, "a") as file:
-    file.writelines(line + '\n')
-
-def generate_problem(args):
+def generate_problems(name, config):
   print('-----------------------------------------------------')
-  kind = random.choice(args.kind)
-  start = int(args.min)
-  stop = int(args.max)
-  fraction_max = int(args.frac_max)
-  if kind == 'add':
-    result = addition(args, random.randint(start, stop), random.randint(start, stop))
-  elif kind == 'sub':
-    result = subtraction(args, random.randint(start, stop), random.randint(start, stop))
-  elif kind == 'mult':
-    result = multiplication(args, random.randint(start, stop), random.randint(start, stop))
-  elif kind == 'div':
-    result = division(args, random.randint(max(1, start), max(1, stop)), random.randint(max(1, start), max(1, stop)))
-  elif kind == 'frac':
-    frac1 = Fraction(random.randint(max(1, 1), max(1, fraction_max)), random.randint(max(1, 1), max(1, fraction_max)))
-    frac2 = Fraction(random.randint(max(1, 1), max(1, fraction_max)), random.randint(max(1, 1), max(1, fraction_max)))
-    result = fraction(args, frac1, frac2)
-  elif kind == 'skip':
-    result = skip_count(args)
-  elif kind == 'tens':
-    result = make_tens(args)
-  elif kind == 'place':
-    result = place_value(args)
-  elif kind == 'dec':
-    greaterThan = float(0)
-    lessThan = float(1)
-    digits = int(args.digits)
-    num1 = round(random.uniform(greaterThan, lessThan), digits)
-    num2 = round(random.uniform(greaterThan, lessThan), digits)
-    result = decimal(args, num1, num2)
-  elif kind == 'gle':
-    result = gle(args, random.randint(start, stop), random.randint(start, stop))
+  question_types = []
+  for qt in config['questions']:
+    question_types.append(qt)
+  kind = random.choice(question_types)
+  print('kind:', kind)
+
+  if kind == 'addition':
+    min_value = config['questions']['addition']['min']
+    max_value = config['questions']['addition']['max']
+    result = addition.addition_problem(config['results_directory'], int(min_value), int(max_value))
+  elif kind == 'subtraction':
+    min_value = config['questions']['subtraction']['min']
+    max_value = config['questions']['subtraction']['max']
+    result = subtraction.subtraction_problem(config['results_directory'], int(min_value), int(max_value))
+  elif kind == 'multiplication':
+    min_value = config['questions']['multiplication']['min']
+    max_value = config['questions']['multiplication']['max']
+    result = multiplication.multiplication_problem(config['results_directory'], random.randint(min_value, max_value), random.randint(min_value, max_value))
+  elif kind == 'division':
+    min_value = config['questions']['division']['min']
+    max_value = config['questions']['division']['max']
+    result = division.division_problem(config['results_directory'], min_value, max_value)
+  elif kind == 'fraction':
+    min_value = config['questions']['fraction']['min']
+    max_value = config['questions']['fraction']['max']
+    result = fraction.fraction_problem(config['results_directory'], min_value, max_value)
+  elif kind == 'skipcount':
+    by_values = config['questions']['skipcount']['by_values']
+    result = skipcount.skip_count_problem(config['results_directory'], by_values)
+  elif kind == 'maketens':
+    result = maketens.make_tens_problem(config['results_directory'])
+  elif kind == 'place_value':
+    min_value = config['questions']['place_value']['min']
+    max_value = config['questions']['place_value']['max']
+    result = placevalue.place_value_problem(config['results_directory'], min_value, max_value)
+  elif kind == 'decimal':
+    digits = config['questions']['decimal']['digits']
+    result = decimalplace.decimal_problem(config['results_directory'], digits)
+  elif kind == 'greaterthan_lessthan':
+    min_value = config['questions']['greaterthan_lessthan']['min']
+    max_value = config['questions']['greaterthan_lessthan']['max']
+    result = greaterless.gle_problem(config['results_directory'], min_value, max_value)
   return result
-
-def addition(args, num1, num2):
-  correct = None
-  prompt = ' '.join([str(num1), '+', str(num2), '= '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      answer = num1 + num2
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', prompt, answer)
-        correct = False
-      log_entry = ','.join(['addition', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def subtraction(args, num1, num2):
-  correct = None
-  prompt = ' '.join([str(max(num1, num2)), '-', str(min(num1,num2)), '= '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      answer = max(num1, num2) - min(num1, num2)
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', prompt, answer)
-        correct = False
-      log_entry = ','.join(['subtraction', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def multiplication(args, num1, num2):
-  correct = None
-  prompt = ' '.join([str(num1), '*', str(num2), '= '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      answer = num1 * num2
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', prompt, answer)
-        correct = False
-      log_entry = ','.join(['multiplication', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def division(args, num1, num2):
-  correct = None
-  print('First give the answer, then the remainder')
-  prompt = ' '.join([str(max(num1, num2)), '/', str(min(num1,num2)), '= '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      reply_remainder = int(input('remainder = '))
-      answer = int(max(num1, num2) / min(num1, num2))
-      answer_remainder = max(num1, num2)%min(num1,num2)
-      if reply == answer and reply_remainder == answer_remainder:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', prompt, answer, ' remainder = ', answer_remainder)
-        correct = False
-      log_entry = ','.join(['division', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def fraction(args, num1, num2):
-  correct = None
-  prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit() or int(reply) > 2:
-      print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
-      continue
-    else:
-      print('the reply is : ', reply)
-      reply = int(reply)
-      answer = comparator(num1, num2)
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        text_answer = ''
-        if answer == 0:
-          text_answer = 'they are equal (enter 0)'
-        elif answer == 1:
-          text_answer = ' '.join([str(num1), '>', str(num2), '(enter 1)'])
-        elif answer == 2:
-          text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
-        print('\tThe correct answer is ', text_answer)
-        correct = False
-      log_entry = ','.join(['fraction', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def decimal(args, num1, num2):
-  correct = None
-  prompt = ' '.join(['Which decimal is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit() or int(reply) > 2:
-      print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
-      continue
-    else:
-      print('the reply is : ', reply)
-      reply = int(reply)
-      answer = comparator(num1, num2)
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        text_answer = ''
-        if answer == 0:
-          text_answer = 'they are equal (enter 0)'
-        elif answer == 1:
-          text_answer = ' '.join([str(num1), '>', str(num2), '(enter 1)'])
-        elif answer == 2:
-          text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)'])
-        print('\tThe correct answer is ', text_answer)
-        correct = False
-      log_entry = ','.join(['decimal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def gle(args, num1, num2):
-  correct = None
-  equal = ' '.join([str(num1), '=', str(num2)])
-  gt = ' '.join([str(num1), '>', str(num2)])
-  lt = ' '.join([str(num1), '<', str(num2)])
-
-  prompt = ' '.join(['Which answer is correct? \n0: ', equal, '\n1: ', gt, '\n2: ', lt, '\n'])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit() or int(reply) > 2:
-      print('Sorry, ' + str(reply) + ' is not an option pick 1 or 2, if they are equal enter 0.' )
-      continue
-    else:
-      print('the reply is : ', reply)
-      reply = int(reply)
-      answer = comparator(num1, num2)
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        text_answer = ''
-        if answer == 0:
-          text_answer = 'they are equal (enter 0)'
-        elif answer == 1:
-          text_answer = ' '.join([str(num1), '>', str(num2), '(enter 1)', '\n\t', str(num1), 'is bigger than', str(num2)])
-        elif answer == 2:
-          text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)', '\n\t', str(num1), 'is smaller than', str(num2)])
-        print('\tThe correct answer is ', text_answer)
-        correct = False
-      log_entry = ','.join(['decimal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def skip_count(args):
-  correct = None
-  by = int(random.choice(args.skip_numbers))
-  number_of_times = random.randint(3, 10)
-  prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
-  reply = input(prompt).strip().split(' ')
-  answer = np.arange(by, by*number_of_times + by, by)
-
-  while True:
-    if len(reply) != len(answer):
-      print('Please enter ', str(number_of_times), ' numbers. You entered ', len(reply), ' numbers.')
-      reply = input(prompt).split(' ')
-    else:
-      reply = [r for r in reply if r.isdigit()]
-      if len(reply) == len(answer):
-        check = pd.DataFrame({'reply':reply, 'answer':answer})
-        check['reply'] = check['reply'].astype(int)
-        check['answer'] = check['answer'].astype(int)
-        check['difference'] = check['reply'] - check['answer']
-        if check['difference'].max() == 0 and check['difference'].min() == 0:
-          correct = True
-          print('Correct!')
-        else:
-          correct = False
-          print('Incorrect.')
-      else:
-        correct = False
-        print('Incorrect. Seems some values were not numbers')
-
-      print(''.join(['\tSkip counting by ', str(by), ' from ', str(by), ' to ', str(by*number_of_times), ' is the same as:']))
-      addition_string = ''
-      for n in np.arange(by, by*number_of_times + by, by):
-        if n != by*number_of_times:
-          addition_string = addition_string  + str(by)+' + '
-        else:
-          addition_string = addition_string  + str(by) + ' = ' + str(by*number_of_times)
-      print('\t', addition_string)
-      multiplication_string = ''
-      multiplication_string = ''.join([str(by), ' * ', str(number_of_times), ' = ', str(by*number_of_times)])
-      print('\t', multiplication_string)
-      log_entry = ','.join(['skip_count', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def make_tens(args):
-  correct = None
-  number = random.randint(0, 9)
-  prompt = ' '.join(['How many do we need to add to', str(number), 'to make 10? '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      answer = 10 - number
-      if reply == answer:
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', answer)
-        correct = False
-      print('\t', number, ' + ', str(10-number), ' = 10')
-      print('\t10 - ', number, ' = ', str(10-number))
-      log_entry = ','.join(['make_tens', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
-
-def place_value(args):
-  correct = None
-  number = random.randint(100, 999)
-  place = random.choice(['ones', 'tens', 'hundreds'])
-  answer = 0
-  if place == 'hundreds':
-    answer = int(str(number)[0])
-  elif place == 'tens':
-    answer = int(str(number)[1])
-  elif place == 'ones':
-    answer = int(str(number)[2])
-  prompt = ' '.join(['What is the value of the', place, 'place in', str(number), '? '])
-  while True:
-    reply = input(prompt).strip()
-    if not reply.isdigit():
-      print('Sorry, ' + str(reply) + ' is not a number.' )
-      continue
-    else:
-      reply = int(reply)
-      if reply == int(answer):
-        print('Correct!')
-        correct = True
-      else:
-        print('Incorrect:')
-        print('\tThe correct answer is', answer)
-        correct = False
-      log_entry = ','.join(['place_value', prompt, str(reply), str(answer), str(correct)])
-      write_log(args, log_entry)
-      print('\n')
-      return correct
 
 def comparator(num1, num2):
   if num1>num2:
@@ -367,11 +94,12 @@ def comparator(num1, num2):
     return 0
 
 def main(args):
-  print(args)
+  print('Preparing test for', args.name)
+  config = read_config(args.name)
   correct_count = 0
-  for i in range(int(args.number_of_problems)):
+  for i in range(int(config['number_of_questions'])):
     print('Problem ', str(i + 1), ':')
-    result = generate_problem(args)
+    result = generate_problems(args.name, config)
     correct_count = correct_count + result
   print('Your score was ', correct_count, ' correct out of ', i + 1, ' problems.  Or ', "{:.0%}".format(correct_count/(i+1)))
 
