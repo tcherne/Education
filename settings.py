@@ -18,8 +18,8 @@ def generate_settings(config_filepath, master_results_path):
         'questions': {
           'addition': {'min': 0, 'max': 1000, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 1000, 'videos': subtraction_videos},
-          'multiplication': {'min': 0, 'max': 1000, 'videos': multiplication_videos},
-          'division': {'min': 0, 'max': 1000, 'videos': division_videos},
+          'multiplication': {'max_one': 1000, 'max_two': 1000, 'videos': multiplication_videos},
+          'division': {'num_max': 1000, 'denom_max': 1000, 'videos': division_videos},
           'fraction': {'min': 0, 'max': 10, 'videos': fraction_videos},
           'decimal': {'digits': 9, 'videos': decimal_videos},
           'greaterthan_lessthan': {'min': 0, 'max': 10, 'videos': greaterthan_lessthan_videos},
@@ -34,8 +34,8 @@ def generate_settings(config_filepath, master_results_path):
         'questions': {
           'addition': {'min': 0, 'max': 1000, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 1000, 'videos': subtraction_videos},
-          'multiplication': {'min': 0, 'max': 1000, 'videos': multiplication_videos},
-          'division': {'min': 0, 'max': 200, 'videos': division_videos},
+          'multiplication': {'max_one': 1000, 'max_two': 1000, 'videos': multiplication_videos},
+          'division': {'num_max': 10, 'denom_max': 2000, 'videos': division_videos},
           'fraction': {'min': 0, 'max': 50, 'videos': fraction_videos},
           'decimal': {'digits': 4, 'videos': decimal_videos},
           'greaterthan_lessthan': {'min': 0, 'max': 1000, 'videos': greaterthan_lessthan_videos},
@@ -49,7 +49,7 @@ def generate_settings(config_filepath, master_results_path):
         'questions': {
           'addition': {'min': 0, 'max': 500, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 500, 'videos': subtraction_videos},
-          'multiplication': {'min': 0, 'max': 10, 'videos': multiplication_videos},
+          'multiplication': {'max_one': 10, 'max_two': 10, 'videos': multiplication_videos},
           'fraction': {'min': 0, 'max': 20, 'videos': fraction_videos},
           'greaterthan_lessthan': {'min': 0, 'max': 500, 'videos': greaterthan_lessthan_videos},
           'skipcount': {'by_values':[2,3,4,5,6,7,8,9,10,12,15,100], 'videos': skipcount_videos},

@@ -8,10 +8,12 @@ import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def division_problem(results_directory, min_value, max_value, videos):
+def division_problem(results_directory, numerator_max_value, denominator_max_value, videos):
   videoprompt.print_video_message(videos)
-  num1 = random.randint(max(1, min_value), max(1, max_value))
-  num2 = random.randint(max(1, min_value), max(1, max_value))
+  # num1 = random.randint(max(1, min_value), max(1, max_value))
+  # num2 = random.randint(max(1, min_value), max(1, max_value))
+  num1 = random.randint(1, numerator_max_value)
+  num2 = random.randint(numerator_max_value, denominator_max_value)
   correct = None
   print('First give the answer, then the remainder')
   prompt = ' '.join([str(max(num1, num2)), '/', str(min(num1,num2)), '= '])

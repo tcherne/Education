@@ -8,10 +8,10 @@ import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def multiplication_problem(results_directory, min_value, max_value, videos):
+def multiplication_problem(results_directory, max_one, max_two, videos):
   videoprompt.print_video_message(videos)
-  num1 = random.randint(min_value, max_value)
-  num2 = random.randint(min_value, max_value)
+  num1 = random.randint(0, max_one)
+  num2 = random.randint(0, max_two)
   correct = None
   prompt = ' '.join([str(num1), '*', str(num2), '= '])
   while True:

@@ -58,13 +58,13 @@ def generate_problems(name, config):
     videos = config['questions']['subtraction']['videos']
     result = subtraction.subtraction_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'multiplication':
-    min_value = config['questions']['multiplication']['min']
-    max_value = config['questions']['multiplication']['max']
+    min_value = config['questions']['multiplication']['max_one']
+    max_value = config['questions']['multiplication']['max_two']
     videos = config['questions']['multiplication']['videos']
     result = multiplication.multiplication_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'division':
-    min_value = config['questions']['division']['min']
-    max_value = config['questions']['division']['max']
+    min_value = config['questions']['division']['num_max']
+    max_value = config['questions']['division']['denom_max']
     videos = config['questions']['division']['videos']
     result = division.division_problem(config['results_directory'], int(min_value), int(max_value), videos)
   elif kind == 'fraction':
