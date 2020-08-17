@@ -35,7 +35,7 @@ def generate_settings(config_filepath, master_results_path):
           'addition': {'min': 0, 'max': 1000, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 1000, 'videos': subtraction_videos},
           'multiplication': {'max_one': 1000, 'max_two': 1000, 'videos': multiplication_videos},
-          'division': {'num_max': 10, 'denom_max': 2000, 'videos': division_videos},
+          'division': {'num_max': 25, 'denom_max': 50000, 'videos': division_videos},
           'fraction': {'min': 0, 'max': 50, 'videos': fraction_videos},
           'decimal': {'digits': 4, 'videos': decimal_videos},
           'greaterthan_lessthan': {'min': 0, 'max': 1000, 'videos': greaterthan_lessthan_videos},
