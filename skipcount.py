@@ -14,11 +14,10 @@ sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Progra
 def skip_count_problem(results_directory, by_values, videos):
   videoprompt.print_video_message(videos)
   correct = None
-  # by = int(random.choice(args.skip_numbers))
   by = int(random.choice(by_values))
   number_of_times = random.randint(3, 10)
-
-  prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), '.\nExample Input: 2 4 6\n:'])
+  print ('Example Input for Skip Counting: 2 4 6')
+  prompt = ''.join(['Skip count by ', str(by), 's.  Your first number will be ', str(by), ' and your last number will be ', str(by*number_of_times), ': '])
   reply = input(prompt).strip().split(' ')
   answer = np.arange(by, by*number_of_times + by, by)
 

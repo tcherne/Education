@@ -1,6 +1,6 @@
 import json
 
-addition_videos = ['https://www.youtube.com/watch?v=4ilGm8cD77c', 'https://www.youtube.com/watch?v=LFki4BENvcw']
+addition_videos = ['https://www.youtube.com/watch?v=4ilGm8cD77c', 'https://www.youtube.com/watch?v=LFki4BENvcw','https://www.youtube.com/watch?v=cbP2N1BQdYc']
 subtraction_videos = ['https://www.youtube.com/watch?v=L_1gwP8m2JM', 'https://www.youtube.com/watch?v=BkzoUfyAXDU']
 multiplication_videos = ['https://www.youtube.com/watch?v=LD4zp8ruvaI', 'https://www.youtube.com/watch?v=FJ5qLWP3Fqo']
 division_videos = ['https://www.youtube.com/watch?v=KGMf314LUc0', 'https://www.youtube.com/watch?v=NaECBQhTaCU']
