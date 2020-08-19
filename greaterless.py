@@ -50,7 +50,7 @@ def gle_problem(results_directory, min_value, max_value, videos):
           text_answer = ' '.join([str(num1), '<', str(num2), '(enter 2)', '\n\t', str(num1), 'is smaller than', str(num2)])
         print('\tThe correct answer is ', text_answer)
         correct = False
-      log_entry = ','.join(['decimal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
+      log_entry = ','.join(['greaterlessequal', prompt.replace('\n', ' '), str(reply), str(answer), str(correct)])
       writelog.log_writer(results_directory, log_entry)
       print('\n')
       return correct
