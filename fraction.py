@@ -19,17 +19,19 @@ def comparator(num1, num2):
 
 def fraction_problem(results_directory, min_value, max_value, videos):
   videoprompt.print_video_message(videos)
+
+  print('min/max: ', min_value, ':', max_value)
   num_1a = random.randint(1, max_value)
   num_1b = random.randint(1, max_value)
-  num_2a = random.randint(1, max_value)
-  num_2b = random.randint(1, max_value)
+  num_2a = random.randint(1, max_value-1)
+  num_2b = random.randint(1, max_value-1)
 
   num1 = Fraction(min(num_1a, num_1b), max(num_1a, num_1b))
   num2 = Fraction(min(num_2a, num_2b), max(num_2a, num_2b))
 
   print(num1, ':', num2)
   correct = None
-  prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n'])
+  prompt = ' '.join(['Which fraction is bigger (1 or 2)? \n1: ', str(num1), '\n2: ', str(num2), '\n0:  They are equal\n'])
   while True:
     reply = input(prompt).strip()
     if not reply.isdigit() or int(reply) > 2:

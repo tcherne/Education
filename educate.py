@@ -21,6 +21,7 @@ import multiplication
 import placevalue
 import skipcount
 import subtraction
+import reward
 
 CONFIG = '/home/timcherne/PythonProjects/Education_Program/'
 
@@ -104,14 +105,20 @@ def comparator(num1, num2):
 
 def main(args):
   settings.generate_settings(args.config_path, args.results_path)
-  print('Preparing test for', args.name)
+  print('\n\n\nPreparing test for', args.name)
+  print('Youtube Khan Academy Page: https://www.youtube.com/user/khanacademy')
+  print('Youtube Duane Habecker Page: https://www.youtube.com/user/dhabecker')
+  print('Youtube Grade 3 and 5 Pages: https://www.youtube.com/channel/UC9BwDsSbbjnYy2LUuswXe6g/playlists?view_as=subscriber')
+  print('\n\n')
   config = read_config(args.name, args.config_path)
   correct_count = 0
   for i in range(int(config['number_of_questions'])):
     print('Problem ', str(i + 1), ':')
     result = generate_problems(args.name, config)
     correct_count = correct_count + result
-  print('Your score was ', correct_count, ' correct out of ', i + 1, ' problems.  Or ', "{:.0%}".format(correct_count/(i+1)))
+    score = correct_count/(i+1)
+  print('Your score was ', correct_count, ' correct out of ', i + 1, ' problems.  Or ', "{:.0%}".format(score))
+  reward.rewared_video(score)
 
 if __name__ == "__main__":
   main(get_arg_parser().parse_args())
