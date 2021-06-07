@@ -8,8 +8,8 @@ import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def multiplication_problem(results_directory, max_one, max_two, videos):
-  videoprompt.print_video_message(videos)
+def multiplication_problem(results_directory, max_one, max_two, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   num1 = random.randint(0, max_one)
   num2 = random.randint(0, max_two)
   correct = None

@@ -8,8 +8,8 @@ import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def subtraction_problem(results_directory, min_value, max_value, videos):
-  videoprompt.print_video_message(videos)
+def subtraction_problem(results_directory, min_value, max_value, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   num1 = random.randint(min_value, max_value)
   num2 = random.randint(min_value, max_value)
   correct = None

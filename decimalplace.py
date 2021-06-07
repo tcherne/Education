@@ -16,8 +16,8 @@ def comparator(num1, num2):
   else:
     return 0
 
-def decimal_problem(results_directory, digits, videos):
-  videoprompt.print_video_message(videos)
+def decimal_problem(results_directory, digits, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   greaterThan = float(0)
   lessThan = float(1)
   num1 = round(random.uniform(greaterThan, lessThan), digits)

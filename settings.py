@@ -3,6 +3,12 @@ import json
 #example commandline
 #python3 /home/timcherne/PythonProjects/Education_Program/educate.py -n Master -r /home/timcherne/Test_Results
 
+grade_6_videos = {'Khan Acadmey': 'https://www.khanacademy.org/math/cc-sixth-grade-math',
+                  'Duane Habecker': 'https://www.youtube.com/c/dhabecker/playlists?view=50&sort=dd&shelf_id=2'}
+grade_4_videos = {'Khan Acadmey': 'https://www.khanacademy.org/math/cc-fourth-grade-math',
+                  'Duane Habecker': 'https://www.youtube.com/c/dhabecker/playlists?view=50&sort=dd&shelf_id=8'}
+grade_2_videos = {'Khan Acadmey': 'https://www.khanacademy.org/math/cc-2nd-grade-math',
+                  'Duane Habecker': 'https://www.youtube.com/c/dhabecker/playlists?view=50&sort=dd&shelf_id=6'}
 addition_videos = {'Basic Addition':'https://www.youtube.com/watch?v=AuX7nPBqDts',
   'Number bonds':'https://www.youtube.com/watch?v=PGjeaWcXMao',
   'Make ten strategy':'https://www.youtube.com/watch?v=q9h4skGoWJ8',
@@ -57,6 +63,8 @@ def generate_settings(config_filepath, master_results_path):
         },
       'Henry': {
         'results_directory': '/'.join([master_results_path, 'Henry/']),
+        'videos': grade_6_videos,
+        'show_hints': False,
         'questions': {
           'addition': {'min': 0, 'max': 1000, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 1000, 'videos': subtraction_videos},
@@ -72,6 +80,8 @@ def generate_settings(config_filepath, master_results_path):
         },
       'Gavin': {
         'results_directory': '/'.join([master_results_path, 'Gavin/']),
+        'videos': grade_4_videos,
+        'show_hints': False,
         'questions': {
           'addition': {'min': 0, 'max': 500, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 500, 'videos': subtraction_videos},
@@ -86,6 +96,8 @@ def generate_settings(config_filepath, master_results_path):
         },
       'Benjamin': {
         'results_directory': '/'.join([master_results_path, 'Benjamin/']),
+        'videos': grade_2_videos,
+        'show_hints': False,
         'questions': {
           'addition': {'min': 0, 'max': 20, 'videos': addition_videos},
           'subtraction': {'min': 0, 'max': 20, 'videos': subtraction_videos},

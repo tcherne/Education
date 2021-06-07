@@ -16,8 +16,8 @@ def comparator(num1, num2):
   else:
     return 0
 
-def gle_problem(results_directory, min_value, max_value, videos):
-  videoprompt.print_video_message(videos)
+def gle_problem(results_directory, min_value, max_value, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   num1 = random.randint(min_value, max_value)
   num2 = random.randint(min_value, max_value)
 

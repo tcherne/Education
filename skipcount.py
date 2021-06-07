@@ -11,8 +11,8 @@ import videoprompt
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
 
-def skip_count_problem(results_directory, by_values, videos):
-  videoprompt.print_video_message(videos)
+def skip_count_problem(results_directory, by_values, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   correct = None
   by = int(random.choice(by_values))
   number_of_times = random.randint(3, 10)

@@ -17,8 +17,8 @@ def comparator(num1, num2):
   else:
     return 0
 
-def fraction_problem(results_directory, min_value, max_value, videos):
-  videoprompt.print_video_message(videos)
+def fraction_problem(results_directory, min_value, max_value, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
 
   print('min/max: ', min_value, ':', max_value)
   num_1a = random.randint(1, max_value)

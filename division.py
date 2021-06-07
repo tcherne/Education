@@ -8,8 +8,8 @@ import videoprompt
 
 sys.path.append(os.path.abspath('/home/timcherne/PythonProjects/Education_Program/'))
 
-def division_problem(results_directory, numerator_max_value, denominator_max_value, videos):
-  videoprompt.print_video_message(videos)
+def division_problem(results_directory, numerator_max_value, denominator_max_value, videos, show_hints):
+  videoprompt.print_video_message(videos, show_hints)
   # num1 = random.randint(max(1, min_value), max(1, max_value))
   # num2 = random.randint(max(1, min_value), max(1, max_value))
   num1 = random.randint(1, numerator_max_value)
